@@ -51,7 +51,12 @@ class Gimme
   private
 
   def stringify_label(label)
-    label.to_s
+    case label
+    when Module then
+      label.name
+    else
+      label.to_s
+    end
   end
 
 end
