@@ -2,6 +2,12 @@ require 'singleton'
 
 class Gimme
 
+  class NotFoundError < RuntimeError
+    def initialize( label )
+      super( "Have not been configured to supply a #{label}" )
+    end
+  end
+
   include Singleton
 
   class << self
@@ -14,7 +20,10 @@ class Gimme
     def a(*args)
       instance.build_a(*args)
     end
-    alias the a
+
+    def the(*args)
+      instance.build_the(*args)
+    end    
 
     def environment=(env)
       instance.environment=(env)
@@ -28,27 +37,49 @@ class Gimme
   end
 
   def reset
-    @construction_specs = {}
+    @regular_objects = {}
+    @singletons = {}
   end
 
-  def add_construction_spec( label, &proc)
-    label = stringify_label(label)
-    @construction_specs[label] = proc
+  def for_a(label,&proc)
+    add_builder( @regular_objects, label, proc )
   end
-  alias :for_a :add_construction_spec
+
+  def for_the(label,&proc)
+    add_builder( @singletons, label, proc )
+  end
 
   def build_a(label, *args)
     label = stringify_label(label)
-    raise "Don't know how to bulid a #{label}" unless @construction_specs.has_key?(label)
+    raise NotFoundError.new( label ) unless @regular_objects.has_key?(label)
     
-    @construction_specs[label].call( @environment, *args )
+    @regular_objects[label].call( @environment, *args )
+  end
+
+  def build_the(label, *args)
+    label = stringify_label(label)
+    raise NotFoundError.new( label ) unless @singletons.has_key?(label)
+
+    if @singletons[label].is_a?( Proc )
+      @singletons[label] = @singletons[label].call( @environment, *args )
+    end 
+    
+    @singletons[label]
   end
 
   def inspect
-    @construction_specs.keys.join("\n")
+    <<EOS
+Regular builders for #{@regular_objects.keys.inspect}
+Singleton builders for #{@singletons.keys.inspect}
+EOS
   end
 
   private
+
+  def add_builder( builder_hash, label, proc)
+    label = stringify_label(label)
+    builder_hash[label] = proc
+  end
 
   def stringify_label(label)
     case label
@@ -59,8 +90,4 @@ class Gimme
     end
   end
 
-end
-
-
-
-#TODO: support label being a class name
+end 
