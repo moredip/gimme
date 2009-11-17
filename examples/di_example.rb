@@ -25,7 +25,7 @@ end
 
 
 Gimme.configure do |g|
-  g.for_a( Memcache ) do |env|
+  g.for_the( Memcache ) do |env|
     Memcache.new( env[:memcache][:host], env[:memcache][:port] )
   end
  
@@ -39,4 +39,4 @@ Gimme.environment = {
   :geocode_service_url => "http://www.geocode.com/services"
 }
 
-Gimme.the(GeocodeGateway).get_coordinates_for_zip( "90210" )
+Gimme.a(GeocodeGateway).get_coordinates_for_zip( "90210" )
