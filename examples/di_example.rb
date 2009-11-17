@@ -4,6 +4,7 @@ require 'gimme'
 class Memcache
   def initialize( host, port )
     puts "creating a connection to a memcached instance at #{host}:#{port}"
+    # ... establish connection to a memcached server
   end
 
   # ...
@@ -13,6 +14,7 @@ end
 # optionally caching the results in memcache
 class GeocodeGateway
   def initialize( url, memcache )
+    @url, @memcache = url, memcache
     puts "creating a gateway to the geocoding service at #{url}"
   end
 
@@ -25,10 +27,13 @@ end
 
 
 Gimme.configure do |g|
+  # maybe we need to use for_the() here because each instance of the object has to establish
+  # an expensive connection to the memcached server.
   g.for_the( Memcache ) do |env|
     Memcache.new( env[:memcache][:host], env[:memcache][:port] )
   end
  
+  # a GeocodeGateway is a cheap object to create, with little state, so we use for_a() here
   g.for_a( GeocodeGateway ) do |env|
     GeocodeGateway.new( env[:geocode_service_url], Gimme.the(Memcache) )
   end
