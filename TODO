@@ -1,8 +1,0 @@
-= Support for pseudo-singletons =
-i.e.
-Gimme.configure do |g|
-  g.for_the(MemcacheService) do 
-    #...
-  end
-  #...
-end
