@@ -10,7 +10,7 @@ describe 'gimme configuration' do
 
   specify 'Gimme#a should return a different instance each time it is called' do
     Gimme.configure do |g|
-      g.for_a(:object) do Object.new; end
+      for_a(:object) do Object.new; end
     end
     first_object = Gimme.a(:object)
     second_object = Gimme.a(:object)
@@ -20,7 +20,7 @@ describe 'gimme configuration' do
   specify "Gimme#the should return the object it is configured to return" do
     the_singleton = Object.new
     Gimme.configure do |g|
-      g.for_the(:singleton) do the_singleton end
+      for_the(:singleton) do the_singleton end
     end
     Gimme.the(:singleton).object_id.should == the_singleton.object_id
   end

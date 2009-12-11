@@ -5,7 +5,7 @@ describe Gimme do
  
   specify "Gimme#the should return the same instance each time it is called" do
     Gimme.configure do |g|
-      g.for_the(:singleton) do Object.new; end
+      for_the(:singleton) do Object.new; end
     end
     first_object = Gimme.the(:singleton)
     second_object = Gimme.the(:singleton)
@@ -23,7 +23,7 @@ describe Gimme do
 
   specify 'Gimme#a should raise a NotFoundError if that label has only been configured for a singleton' do
     Gimme.configure do |g|
-      g.for_the(:singleton) do Object.new; end
+      for_the(:singleton) do Object.new; end
     end
     
     lambda{
@@ -33,7 +33,7 @@ describe Gimme do
 
   specify 'Gimme#the should raise a NotFoundError if that label has only been configured for a regular object' do
     Gimme.configure do |g|
-      g.for_a(:object) do Object.new; end
+      for_a(:object) do Object.new; end
     end
     
     lambda{

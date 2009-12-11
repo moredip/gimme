@@ -1,4 +1,4 @@
-require 'singleton'
+require 'gimme_configurator'
 
 class Gimme
 
@@ -7,13 +7,13 @@ class Gimme
       super( "Have not been configured to supply a #{label}" )
     end
   end
-
-  include Singleton
-
   class << self
-    def configure
-      instance.reset
-      yield instance
+    attr_reader :instance
+   
+    def configure(&block)
+      configurator = GimmeConfigurator.new
+      configurator.instance_eval &block
+      @instance = configurator.build_gimme
       instance
     end
 
@@ -32,8 +32,9 @@ class Gimme
 
   attr_writer :environment
 
-  def initialize
-    reset
+  def initialize( singleton_scope = {}, no_scope = {} )
+    @singletons = singleton_scope
+    @regular_objects = no_scope
   end
 
   def reset
@@ -50,14 +51,12 @@ class Gimme
   end
 
   def build_a(label, *args)
-    label = stringify_label(label)
     raise NotFoundError.new( label ) unless @regular_objects.has_key?(label)
     
     @regular_objects[label].call( @environment, *args )
   end
 
   def build_the(label, *args)
-    label = stringify_label(label)
     raise NotFoundError.new( label ) unless @singletons.has_key?(label)
 
     if @singletons[label].is_a?( Proc )
