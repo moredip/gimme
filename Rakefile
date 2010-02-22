@@ -16,7 +16,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = "A lightweight implementation of the Registry pattern, wrapped in a pretty DSL bow."
 	s.description = "A simple implementation of a Registry, along with a cute DSL to configure and use it. You tell Gimme how to create the well-known objects in your system. Then whenever you need an instance of one of those objects you just ask Gimme for one."
-  s.files = 'gimme.rb'
+  s.files = s.files = FileList["lib/**/*"].to_a
   s.test_files = FileList["{spec}/**/*_spec.rb"].to_a
   s.has_rdoc = false
   s.extra_rdoc_files = ["README.md"]
