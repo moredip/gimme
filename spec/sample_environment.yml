@@ -1,0 +1,7 @@
+logger:
+  level: DEBUG
+  sink: database_logger
+remote_service:
+  port: 6789
+  host: foo.bar.baz
+

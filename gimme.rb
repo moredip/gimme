@@ -24,6 +24,11 @@ class Gimme
     def environment=(env)
       instance.environment=(env)
     end
+
+		def load_environment_from_yaml(filepath)
+			require 'yaml'
+			instance.environment = YAML::load( File.open(filepath,'r') )
+		end
   end
 
   attr_writer :environment
