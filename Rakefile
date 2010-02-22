@@ -9,7 +9,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "gimme"
-  s.version = "0.0.2"
+  s.version = "0.0.3"
   s.author = "Pete Hodgson"
   s.email = "gimme@thepete.net"
   s.homepage = "http://github.com/moredip/gimme"
