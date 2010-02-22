@@ -18,12 +18,8 @@ class Gimme
     end
 
     def a(*args)
-      instance.build_a(*args)
+      instance.retrieve(*args)
     end
-
-    def the(*args)
-      instance.build_the(*args)
-    end    
 
     def environment=(env)
       instance.environment=(env)
@@ -50,6 +46,23 @@ class Gimme
     add_builder( @singletons, label, proc )
   end
 
+  def retrieve(label,*args)
+    if @regular_objects.has_key?(label)
+			return build_a(label,*args)
+    else
+			return build_the(label,*args)
+    end
+  end
+
+  def inspect
+    <<EOS
+Regular builders for #{@regular_objects.keys.inspect}
+Singleton builders for #{@singletons.keys.inspect}
+EOS
+  end
+
+  private
+
   def build_a(label, *args)
     raise NotFoundError.new( label ) unless @regular_objects.has_key?(label)
     
@@ -66,14 +79,6 @@ class Gimme
     @singletons[label]
   end
 
-  def inspect
-    <<EOS
-Regular builders for #{@regular_objects.keys.inspect}
-Singleton builders for #{@singletons.keys.inspect}
-EOS
-  end
-
-  private
 
   def add_builder( builder_hash, label, proc)
     label = stringify_label(label)
