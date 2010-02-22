@@ -31,6 +31,7 @@ class Gimme
   def initialize( singleton_scope = {}, no_scope = {} )
     @singletons = singleton_scope
     @regular_objects = no_scope
+		@environment = {}
   end
 
   def reset
