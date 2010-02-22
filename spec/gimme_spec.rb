@@ -31,4 +31,15 @@ describe Gimme do
     }.should raise_error(Gimme::NotFoundError)
   end 
 
+	specify 'additional arguments are passed to creation block' do
+		Gimme.configure do |g|
+			for_a(:arguments_echo) do |env,*args|
+				args
+			end
+		end
+
+		Gimme.a(:arguments_echo,'a',:b,3).should == ['a',:b,3]
+		Gimme.a(:arguments_echo).should == []
+	end
+
 end
