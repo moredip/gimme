@@ -30,9 +30,12 @@ later on when it's asked for an instance of that object.
 
 ## Use 
 
-Ask Gimme for an object by calling Gimme.the or Gimme.a, for singletons and non-singletons respectively. As you'd expect, Gimme calls the creation block each time
-a non-singleton is requested, and only once when a singleton is requested. Subsequent requests for the singleton will simply return the object created the first time the
-singleton's creation block was called.
+Ask Gimme for an object by calling the Gimme.a(:some_label) retrieval method. Note that you use the same method to retrieve both singletons and non-singletons. As you'd expect, Gimme calls the creation block each time
+a non-singleton is requested, and only once when a singleton is requested. Subsequent requests for the singleton will simply return the object created the first time the singleton's creation block was called.
+
+## Creation parameters
+
+If you pass additional parameters to the retrieval method then these will be forwarded on to the creation block. Note that if you are retrieving a singleton object which has already been retrieved previously then the creation parameters will be silently ignored.
 
 ## Environments
 You can supply Gimme with an environment hash, which generally contains application settings, For example you might add email server settings or api keys to your environment.
